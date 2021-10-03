@@ -1,13 +1,10 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
-
-	"google.golang.org/api/books/v1"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -60,29 +57,31 @@ func connectDB() {
 	defer create.Close()
 }
 
-// func getBooks(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Println("getting books")
-// }
+func getBooks(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Welcome to the Books Page!")
+	fmt.Println("Endpoint Hit: homePage")
+}
 
 func handleRequests() {
 	// creates a new instance of a mux router
 	myRouter := mux.NewRouter().StrictSlash(true)
 
 	//gets all books in db
-	myRouter.HandleFunc("/books", getBooks).Methods("GET")
+	myRouter.HandleFunc("/books", getBooks)
 
 	//get individual book
-	myRouter.HandleFunc("/book{id}", getOneBook).Methods("GET")
+	// myRouter.HandleFunc("/book{id}", getOneBook).Methods("GET")
 
 	// Running the Server
 	log.Fatal(http.ListenAndServe(":3000", myRouter))
 }
 
 func main() {
-	ctx := context.Background()
-	booksService, err := books.NewService(ctx)
-	if err != nil {
-		fmt.Println("something wrong with google books")
-	}
+	// ctx := context.Background()
+	// booksService, err := books.NewService(ctx)
+	// if err != nil {
+	// 	fmt.Println("something wrong with google books")
+	// }
 	connectDB()
+	handleRequests()
 }
